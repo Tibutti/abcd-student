@@ -27,7 +27,8 @@ pipeline {
                -v /mnt/c/Szkolenia/abcd-student/.zap/passive.yaml:/wrk:rw \
                -v /mnt/c/Szkolenia/Downloads/Reports/:/wrk/reports \
                -t ghcr.io/zaproxy/zaproxy:stable bash -c \
-               "zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive_scan.yaml" \
+               
+               "mkdir -p /wrk/reports && zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive_scan.yaml" \
                || true
       '''
     }
