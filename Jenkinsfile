@@ -22,7 +22,7 @@ pipeline {
             sleep 20
         '''
        sh '''
-           docker run --name zap \
+           docker run --user=root --name zap \
                --add-host=host.docker.internal:host-gateway \
                -v /mnt/c/Szkolenia/abcd-student/.zap/passive.yaml:/wrk:rw \
                -v /mnt/c/Szkolenia/Downloads/Reports/:/wrk/reports \
