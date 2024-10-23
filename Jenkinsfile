@@ -19,12 +19,12 @@ pipeline {
             docker run --name juice-shop -d --rm \
                 -p 3000:3000 \
                 bkimminich/juice-shop
-            sleep 5
+            sleep 20
         '''
        sh '''
            docker run --name zap \
                --add-host=host.docker.internal:host-gateway \
-               -v /mnt/c/Szkolenia/abcd-student/.zap:/wrk:rw \
+               -v /mnt/c/Szkolenia/abcd-student/.zap/passive_scan.yaml:/wrk:rw \
                -v /mnt/c/Szkolenia/Downloads/Reports/:/wrk/reports \
                -t ghcr.io/zaproxy/zaproxy:stable bash -c \
                "zap.sh -cmd -addonupdate; zap.sh -cmd -addoninstall communityScripts -addoninstall pscanrulesAlpha -addoninstall pscanrulesBeta -autorun /zap/wrk/passive_scan.yaml" \
