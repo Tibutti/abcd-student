@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {
                     cleanWs()
-                    git credentialsId: 'abcd', url: 'https://github.com/Tibutti/abcd', branch: 'main'
+                    git credentialsId: 'github-token', url: 'https://github.com/Tibutti/abcd-student', branch: 'main'
                 }
             }
         }
