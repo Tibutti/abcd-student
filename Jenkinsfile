@@ -22,7 +22,7 @@ pipeline {
                 sh '''
                     docker run --name juice-shop -d --rm \
                     -p 3000:3000 bkimminich/juice-shop
-                    while ! curl -s http://localhost:3000 > /dev/null; do sleep 1; done
+                    sleep 20
                 '''
                 sh '''
                     docker run --name zap \
