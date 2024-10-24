@@ -43,12 +43,12 @@ pipeline {
             }
         }
     }
-}
-post {
-    always {
-        echo 'Archiving results...'
-        archiveArtifacts artifacts" 'results/**/*', fingerprint: true, allowEmptyArchive: true
-        echo 'Sending reports to DefectDojo...'
-        defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan',engagementName: 'mateusz.tyburski81@gmail.com')
+    post {
+        always {
+            echo 'Archiving results...'
+            archiveArtifacts artifacts: 'results/**/*', fingerprint: true, allowEmptyArchive: true
+            echo 'Sending reports to DefectDojo...'
+            defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'mateusz.tyburski81@gmail.com')
+        }
     }
 }
