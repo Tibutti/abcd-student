@@ -30,16 +30,16 @@ pipeline {
                 sh 'osv-scanner scan --lockfile package-lock.json --format json --output ${RESULT_PATH}' || true
             }
 
-            post {
-                always {
-                    defectDojoPublisher(
-                        artifact: RESULT_PATH, 
-                        productName: PRODUCT_NAME, 
-                        scanType: 'OSV Scan', 
-                        engagementName: ENGAGEMENT_NAME
-                    )
-                }
-            }
+           // post {
+           //     always {
+           //         defectDojoPublisher(
+           //             artifact: RESULT_PATH, 
+           //             productName: PRODUCT_NAME, 
+           //             scanType: 'OSV Scan', 
+           //             engagementName: ENGAGEMENT_NAME
+           //         )
+           //     }
+           // }
         }
 
         // Zakomentowany etap "DAST"
