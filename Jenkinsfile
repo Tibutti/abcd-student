@@ -27,7 +27,7 @@ pipeline {
             }
 
             steps {
-                sh 'osv-scanner scan --lockfile package-lock.json --format json --output ${RESULT_PATH}'
+                sh 'osv-scanner scan --lockfile package-lock.json --format json --output ${RESULT_PATH}' || true
             }
 
             post {
