@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {
                     cleanWs()
-                    git credentialsId: 'github-token', url: 'https://github.com/Tibutti/abcd-student', branch: 'main' 
+                    git credentialsId: 'abcd', url: 'https://github.com/Tibutti/abcd', branch: 'main' 
                 }
             }
         }
@@ -35,12 +35,8 @@ pipeline {
                     } else {
                         echo 'Skanowanie SCA zakończone pomyślnie.'
                     }
-                }
-            }
 
-            post {
-                always {
-                    // Upewnij się, że plik wynikowy istnieje przed publikacją
+                    // Sprawdzenie, czy plik wynikowy istnieje przed publikacją
                     if (fileExists(RESULT_PATH)) {
                         defectDojoPublisher(
                             artifact: RESULT_PATH, 
