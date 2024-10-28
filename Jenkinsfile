@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {
                     cleanWs()
-                    git credentialsId: 'github-token', url: 'https://github.com/Tibutti/abcd-student', branch: 'main'
+                    git credentialsId: 'github-token', url: 'https://github.com/Tibutti/abcd-student', branch: 'main' 
                 }
             }
         }
@@ -27,19 +27,32 @@ pipeline {
             }
 
             steps {
-                sh 'osv-scanner scan --lockfile package-lock.json --format json --output ${RESULT_PATH}' || true
+                // Uruchomienie osv-scanner i sprawdzenie sukcesu
+                script {
+                    def scanResult = sh(script: 'osv-scanner scan --lockfile package-lock.json --format json --output ${RESULT_PATH}', returnStatus: true)
+                    if (scanResult != 0) {
+                        echo 'Skanowanie SCA nie powiodło się, sprawdź wynik polecenia dla szczegółów.'
+                    } else {
+                        echo 'Skanowanie SCA zakończone pomyślnie.'
+                    }
+                }
             }
 
-           // post {
-           //     always {
-           //         defectDojoPublisher(
-           //             artifact: RESULT_PATH, 
-           //             productName: PRODUCT_NAME, 
-           //             scanType: 'OSV Scan', 
-           //             engagementName: ENGAGEMENT_NAME
-           //         )
-           //     }
-           // }
+            post {
+                always {
+                    // Upewnij się, że plik wynikowy istnieje przed publikacją
+                    if (fileExists(RESULT_PATH)) {
+                        defectDojoPublisher(
+                            artifact: RESULT_PATH, 
+                            productName: PRODUCT_NAME, 
+                            scanType: 'OSV Scan', 
+                            engagementName: ENGAGEMENT_NAME
+                        )
+                    } else {
+                        echo "Artefakt ${RESULT_PATH} nie istnieje, pomijam publikację w DefectDojo."
+                    }
+                }
+            }
         }
 
         // Zakomentowany etap "DAST"
@@ -69,15 +82,16 @@ pipeline {
         //         }
         //     }
         // }
+
     }
     
     // Zakomentowany blok post-pipeline związany z DAST
     //
     // post {
     //     always {
-    //         echo 'Archiving results...'
+    //         echo 'Archiwizowanie wyników...'
     //         archiveArtifacts artifacts: 'results/**/*', fingerprint: true, allowEmptyArchive: true
-    //         echo 'Sending reports to DefectDojo...'
+    //         echo 'Wysyłanie raportów do DefectDojo...'
     //         defectDojoPublisher(artifact: 'results/zap_xml_report.xml', productName: 'Juice Shop', scanType: 'ZAP Scan', engagementName: 'mateusz.tyburski81@gmail.com')
     //     }
     // }
