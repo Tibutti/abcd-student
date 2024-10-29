@@ -19,20 +19,36 @@ pipeline {
             }
         }
 
-        stage('Skanowanie sekretów przez Trufflehog') {
-             steps {
-                 sh 'trufflehog git file://. --only-verified --json > results/trufflehog.json'
-             }
-             post {
-                 always {
-                     defectDojoPublisher(artifact: 'results/trufflehog.json', 
-                             productName: 'Juice Shop', 
-                             scanType: 'Trufflehog Scan', 
-                             engagementName: 'mateusz.tyburski81@gmail.com')
-                     
-                 }
-             }
+        stage('Skanowanie przy pomocy Semgrep') {
+            steps {
+                script {
+                    sh 'semgrep scan --config auto --output results/semgrep-report.json --json'
+                }
+            }
+            post {
+                always {
+                    defectDojoPublisher(artifact: 'results/semgrep-report.json', 
+                            productName: 'Juice Shop', 
+                            scanType: 'Semgrep JSON Report', 
+                            engagementName: 'mateusz.tyburski81@gmail.com')
+                }
+            }
         }
+
+       // stage('Skanowanie sekretów przez Trufflehog') {
+       //      steps {
+       //          sh 'trufflehog git file://. --only-verified --json > results/trufflehog.json'
+       //      }
+       //      post {
+       //          always {
+       //              defectDojoPublisher(artifact: 'results/trufflehog.json', 
+       //                      productName: 'Juice Shop', 
+       //                      scanType: 'Trufflehog Scan', 
+       //                      engagementName: 'mateusz.tyburski81@gmail.com')
+       //              
+       //          }
+       //      }
+       // }
         // stage('SCA scan - przy pomocy osv-scanner ') {
         //    environment {
         //        RESULT_PATH = 'results/sca-osv-scanner.json'
